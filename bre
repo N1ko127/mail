@@ -1,0 +1,32 @@
+<?php
+  $the_url = isset($_REQUEST['url']) ? htmlspecialchars($_REQUEST['url']) : ''; //kollar om variabeln är satt
+   
+  if (isset($_REQUEST['url']) && !empty($_REQUEST['url'])) {
+    // fetch data from specified url							//har ett värde och inte är tom, då utför $text
+    $text = file_get_contents($_REQUEST['url']);
+  }
+   
+  // parse emails
+  if (!empty($text)) {			//om den har fårr info då utför res
+    $res = preg_match_all(
+      "/[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\.-][a-z0-9]+)*)+\\.[a-z]{2,}/i",
+      $text,
+      $matches
+    );
+   
+    if ($res) {
+      foreach(array_unique($matches[0]) as $email) {		//kollar igenom varje array yäni loop
+        echo $email . "<br />";
+      }
+    }
+    else {
+      echo "No emails found.";
+    }
+  }
+   
+  ?>
+  <form method="post"> 
+    <input type="text" name="url" size="65" /><br />
+
+  <input type="submit" value="Visa mailaddresser" />
+</form> 
